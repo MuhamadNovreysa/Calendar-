@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal AMA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4bb543;
+            --danger: #dc3545;
+            --warning: #ffcc00;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: var(--radius);
+            transition: background 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        main {
+            padding: 2rem 0;
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #3a9a33;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .btn-warning:hover {
+            background: #e6b800;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .dashboard-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            width: 250px;
+        }
+
+        .ama-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .ama-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .ama-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .ama-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem;
+        }
+
+        .ama-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .ama-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .ama-body {
+            padding: 1rem;
+        }
+
+        .ama-detail {
+            display: flex;
+            margin-bottom: 0.8rem;
+        }
+
+        .ama-detail i {
+            width: 20px;
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .reward-tag {
+            display: inline-block;
+            background: #ffcc00;
+            color: var(--dark);
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .ama-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ddd;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background: var(--success);
+            color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p {
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+
+        .won-badge {
+            background: var(--success);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .dashboard-controls {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+
+            .ama-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-microphone-alt"></i>
+                    <span>Jadwal AMA</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active" data-section="dashboard">Dashboard</a></li>
+                        <li><a href="#" data-section="form">Tambah AMA</a></li>
+                        <li><a href="#" data-section="won">Menang</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Dashboard Section -->
+        <section id="dashboard-section">
+            <h2 class="section-title">Jadwal AMA Mendatang</h2>
+            
+            <div class="dashboard-controls">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Cari AMA...">
+                    <button class="btn" id="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <button class="btn" id="add-ama-btn"><i class="fas fa-plus"></i> Tambah AMA Baru</button>
+            </div>
+
+            <div id="ama-container" class="ama-grid">
+                <!-- AMA cards will be dynamically inserted here -->
+                <div class="empty-state" id="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <h3>Belum ada jadwal AMA</h3>
+                    <p>Tambahkan jadwal AMA pertama Anda dengan mengklik tombol "Tambah AMA Baru"</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Form Section -->
+        <section id="form-section" class="hidden">
+            <h2 class="section-title">Tambah Jadwal AMA Baru</h2>
+            
+            <div class="card">
+                <form id="ama-form">
+                    <div class="form-group">
+                        <label for="ama-date">Tanggal</label>
+                        <input type="date" id="ama-date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ama-time">Waktu</label>
+                        <input type="time" id="ama-time" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ama-venue">Link Venue</label>
+                        <input type="url" id="ama-venue" placeholder="https://example.com/ama" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ama-reward">Reward</label>
+                        <input type="text" id="ama-reward" placeholder="Contoh: E-money Rp 50.000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Simpan AMA</button>
+                        <button type="button" class="btn btn-danger" id="cancel-btn"><i class="fas fa-times"></i> Batal</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Won Section -->
+        <section id="won-section" class="hidden">
+            <h2 class="section-title">AMA yang Sudah Menang</h2>
+            
+            <div id="won-container" class="ama-grid">
+                <!-- Won AMA cards will be dynamically inserted here -->
+                <div class="empty-state" id="won-empty-state">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Belum ada AMA yang menang</h3>
+                    <p>Pindahkan AMA dari dashboard ke bagian ini dengan menekan tombol "Menang"</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="notification" class="notification">
+        <span id="notification-text">AMA berhasil ditambahkan!</span>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Tentang Kami</h3>
+                    <p>Platform untuk mengelola jadwal sesi AMA (Ask Me Anything) dengan mudah dan efisien.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Kontak</h3>
+                    <p>Email: info@amajadwal.com</p>
+                    <p>Telepon: (021) 1234-5678</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Ikuti Kami</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Jadwal AMA. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Data storage
+        let amaData = JSON.parse(localStorage.getItem('amaData')) || [];
+        let wonData = JSON.parse(localStorage.getItem('wonData')) || [];
+        let editIndex = -1;
+
+        // DOM Elements
+        const dashboardSection = document.getElementById('dashboard-section');
+        const formSection = document.getElementById('form-section');
+        const wonSection = document.getElementById('won-section');
+        const amaForm = document.getElementById('ama-form');
+        const amaContainer = document.getElementById('ama-container');
+        const wonContainer = document.getElementById('won-container');
+        const emptyState = document.getElementById('empty-state');
+        const wonEmptyState = document.getElementById('won-empty-state');
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const addAmaBtn = document.getElementById('add-ama-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notification-text');
+
+        // Navigation
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.getAttribute('data-section');
+                
+                // Update active nav link
+                document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Show selected section
+                if (section === 'dashboard') {
+                    showDashboard();
+                } else if (section === 'form') {
+                    showForm();
+                } else if (section === 'won') {
+                    showWon();
+                }
+            });
+        });
+
+        // Show dashboard
+        function showDashboard() {
+            dashboardSection.classList.remove('hidden');
+            formSection.classList.add('hidden');
+            wonSection.classList.add('hidden');
+            renderAMA();
+        }
+
+        // Show form
+        function showForm() {
+            dashboardSection.classList.add('hidden');
+            formSection.classList.remove('hidden');
+            wonSection.classList.add('hidden');
+            // Reset form
+            amaForm.reset();
+            editIndex = -1;
+        }
+
+        // Show won section
+        function showWon() {
+            dashboardSection.classList.add('hidden');
+            formSection.classList.add('hidden');
+            wonSection.classList.remove('hidden');
+            renderWon();
+        }
+
+        // Add AMA button
+        addAmaBtn.addEventListener('click', showForm);
+
+        // Cancel button
+        cancelBtn.addEventListener('click', showDashboard);
+
+        // Form submission
+        amaForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const ama = {
+                id: Date.now(),
+                date: document.getElementById('ama-date').value,
+                time: document.getElementById('ama-time').value,
+                venue: document.getElementById('ama-venue').value,
+                reward: document.getElementById('ama-reward').value
+            };
+            
+            if (editIndex === -1) {
+                // Add new AMA
+                amaData.push(ama);
+                showNotification('AMA berhasil ditambahkan!');
+            } else {
+                // Update existing AMA
+                amaData[editIndex] = ama;
+                showNotification('AMA berhasil diperbarui!');
+                editIndex = -1;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('amaData', JSON.stringify(amaData));
+            
+            // Reset form and show dashboard
+            amaForm.reset();
+            showDashboard();
+        });
+
+        // Sort AMA data by date and time (newest first)
+        function sortAMAData() {
+            amaData.sort((a, b) => {
+                // Combine date and time for comparison
+                const dateTimeA = new Date(`${a.date}T${a.time}`);
+                const dateTimeB = new Date(`${b.date}T${b.time}`);
+                
+                // Sort in descending order (newest first)
+                return dateTimeB - dateTimeA;
+            });
+        }
+
+        // Render AMA cards
+        function renderAMA(filteredData = null) {
+            sortAMAData();
+            const dataToRender = filteredData || amaData;
+            
+            if (dataToRender.length === 0) {
+                emptyState.classList.remove('hidden');
+                amaContainer.innerHTML = '';
+                amaContainer.appendChild(emptyState);
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            amaContainer.innerHTML = '';
+            
+            dataToRender.forEach((ama, index) => {
+                const amaCard = document.createElement('div');
+                amaCard.className = 'ama-card';
+                
+                const dateObj = new Date(ama.date);
+                const formattedDate = dateObj.toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                amaCard.innerHTML = `
+                    <div class="ama-header">
+                        <div class="ama-title">Sesi AMA</div>
+                        <div class="ama-date">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>${formattedDate} | ${ama.time}</span>
+                        </div>
+                    </div>
+                    <div class="ama-body">
+                        <div class="ama-detail">
+                            <i class="fas fa-link"></i>
+                            <a href="${ama.venue}" target="_blank">Link Venue</a>
+                        </div>
+                        <div class="ama-detail">
+                            <i class="fas fa-gift"></i>
+                            <span>${ama.reward}</span>
+                        </div>
+                        <div class="reward-tag">Reward Menarik!</div>
+                    </div>
+                    <div class="ama-actions">
+                        <button class="btn btn-small btn-warning won-btn" data-index="${index}">
+                            <i class="fas fa-trophy"></i> Menang
+                        </button>
+                        <button class="btn btn-small btn-danger delete-btn" data-index="${index}">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                    </div>
+                `;
+                
+                amaContainer.appendChild(amaCard);
+            });
+            
+            // Add event listeners to won and delete buttons
+            document.querySelectorAll('.won-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = e.currentTarget.getAttribute('data-index');
+                    markAsWon(index);
+                });
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = e.currentTarget.getAttribute('data-index');
+                    deleteAMA(index);
+                });
+            });
+        }
+
+        // Render Won AMA cards
+        function renderWon() {
+            if (wonData.length === 0) {
+                wonEmptyState.classList.remove('hidden');
+                wonContainer.innerHTML = '';
+                wonContainer.appendChild(wonEmptyState);
+                return;
+            }
+            
+            wonEmptyState.classList.add('hidden');
+            
+            wonContainer.innerHTML = '';
+            
+            wonData.forEach((ama, index) => {
+                const amaCard = document.createElement('div');
+                amaCard.className = 'ama-card';
+                
+                const dateObj = new Date(ama.date);
+                const formattedDate = dateObj.toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                amaCard.innerHTML = `
+                    <div class="ama-header">
+                        <div class="ama-title">Sesi AMA</div>
+                        <div class="ama-date">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>${formattedDate} | ${ama.time}</span>
+                        </div>
+                    </div>
+                    <div class="ama-body">
+                        <div class="ama-detail">
+                            <i class="fas fa-link"></i>
+                            <a href="${ama.venue}" target="_blank">Link Venue</a>
+                        </div>
+                        <div class="ama-detail">
+                            <i class="fas fa-gift"></i>
+                            <span>${ama.reward}</span>
+                        </div>
+                        <div class="won-badge">
+                            <i class="fas fa-trophy"></i> Sudah Menang
+                        </div>
+                    </div>
+                    <div class="ama-actions">
+                        <button class="btn btn-small btn-danger delete-won-btn" data-index="${index}">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                    </div>
+                `;
+                
+                wonContainer.appendChild(amaCard);
+            });
+            
+            // Add event listeners to delete buttons in won section
+            document.querySelectorAll('.delete-won-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = e.currentTarget.getAttribute('data-index');
+                    deleteWonAMA(index);
+                });
+            });
+        }
+
+        // Mark AMA as won
+        function markAsWon(index) {
+            const wonAMA = amaData[index];
+            wonData.push(wonAMA);
+            amaData.splice(index, 1);
+            
+            localStorage.setItem('amaData', JSON.stringify(amaData));
+            localStorage.setItem('wonData', JSON.stringify(wonData));
+            
+            renderAMA();
+            showNotification('AMA berhasil dipindahkan ke bagian Menang!');
+        }
+
+        // Delete AMA
+        function deleteAMA(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus AMA ini?')) {
+                amaData.splice(index, 1);
+                localStorage.setItem('amaData', JSON.stringify(amaData));
+                renderAMA();
+                showNotification('AMA berhasil dihapus!');
+            }
+        }
+
+        // Delete Won AMA
+        function deleteWonAMA(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus AMA ini?')) {
+                wonData.splice(index, 1);
+                localStorage.setItem('wonData', JSON.stringify(wonData));
+                renderWon();
+                showNotification('AMA berhasil dihapus!');
+            }
+        }
+
+        // Search functionality
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            const query = searchInput.value.toLowerCase();
+            
+            if (query.trim() === '') {
+                renderAMA();
+                return;
+            }
+            
+            const filteredData = amaData.filter(ama => 
+                ama.date.toLowerCase().includes(query) ||
+                ama.time.toLowerCase().includes(query) ||
+                ama.reward.toLowerCase().includes(query)
+            );
+            
+            renderAMA(filteredData);
+        }
+
+        function showNotification(message, isError = false) {
+            notificationText.textContent = message;
+            
+            if (isError) {
+                notification.classList.add('error');
+            } else {
+                notification.classList.remove('error');
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize
+        renderAMA();
+    </script>
+</body>
+</html>
